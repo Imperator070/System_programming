@@ -1,0 +1,28 @@
+дисассемблирование файла для 64-разрядной ОС
+(gdb) disassemble _start
+Dump of assembler code for function _start:
+   0x000000000040101c <+0>:     mov    $0x4,%rax
+   0x0000000000401023 <+7>:     mov    $0x1,%rbx
+   0x000000000040102a <+14>:    movabs $0x401000,%rcx
+   0x0000000000401034 <+24>:    mov    $0x1d,%rdx
+   0x000000000040103b <+31>:    int    $0x80
+   0x000000000040103d <+33>:    mov    $0x1,%rax
+   0x0000000000401044 <+40>:    mov    $0x0,%rbx
+   0x000000000040104b <+47>:    int    $0x80
+End of assembler dump.
+(gdb) 
+
+
+дисассемблирование файла для 32-разрядной ОС
+(gdb) disassemble _start
+Dump of assembler code for function _start:
+   0x08049034 <+0>:     mov    $0x4,%eax
+   0x08049039 <+5>:     mov    $0x1,%ebx
+   0x0804903e <+10>:    mov    $0x8049000,%ecx
+   0x08049043 <+15>:    mov    $0x29,%edx
+   0x08049048 <+20>:    int    $0x80
+   0x0804904a <+22>:    mov    $0x1,%eax
+   0x0804904f <+27>:    mov    $0x0,%ebx
+   0x08049054 <+32>:    int    $0x80
+End of assembler dump.
+(gdb) 
