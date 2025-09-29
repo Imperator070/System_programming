@@ -5,8 +5,8 @@ public exit
 public print
 
 section '.bss' writable
-  plus db 6 dup ('+')
-  newline db 6 dup (0xA)
+  plus db 7 dup ('*')
+  newline db 7 dup (0xA)
   place db 1
   num dq 0
 
@@ -32,7 +32,7 @@ section '.text' executable
       call print
 
       inc rsi
-      cmp rsi, 6
+      cmp rsi, 7
       jne .iter1
     call exit
 

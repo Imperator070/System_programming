@@ -3,11 +3,11 @@ public _start
 public exit
 
 section '.bss' writable
-my db 0xA, "AMVtdiYVETHnNhuYwnWDVBqL"
+my db 0xA, "yYVdeqpJSTVCbxBwsYMjXQOOKujAPLMXdJMFKy"
 
 section '.text' executable
 _start:
-  mov rcx, 24
+  mov rcx, 38
   .iter:
     push rcx
 

@@ -3,7 +3,7 @@ format ELF64
 public _start
 public print
 
-  num dq 5277616985
+  num dq 4253155976
   res dq 0
   ten dq 10
   place db 1

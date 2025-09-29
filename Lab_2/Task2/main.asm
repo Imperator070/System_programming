@@ -3,10 +3,10 @@ public _start
 public exit
 
 section '.bss' writable
-plus db "+"
+plus db "*"
 newline db 0xA
-M db 6
-K db 11
+M db 7
+K db 13
 
 section '.text' executable
 _start:
