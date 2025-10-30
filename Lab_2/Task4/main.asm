@@ -24,10 +24,10 @@ public print
 
     call print
 
-    mov eax, 60
-    xor edi, edi
-    mov eax, 1
-    mov ebx, 0
+    mov rax, 60
+    xor rdi, edi
+    mov rax, 1
+    mov rbx, 0
     int 0x80
 
 print:
@@ -51,10 +51,10 @@ print:
         add rax, '0'
         mov [place], al
 
-        mov eax, 1
-        mov edi, 1
+        mov rax, 1
+        mov rdi, 1
         mov rsi, place
-        mov edx, 1
+        mov rdx, 1
         syscall
 
         dec rbx
@@ -66,9 +66,9 @@ print:
         add rax, '0'
         mov [place], al
 
-        mov eax, 1
-        mov edi, 1
+        mov rax, 1
+        mov rdi, 1
         mov rsi, place
-        mov edx, 1
+        mov rdx, 1
         syscall
         ret
