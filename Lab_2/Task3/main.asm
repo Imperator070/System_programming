@@ -39,15 +39,15 @@ section '.text' executable
 print:
   push rax
   mov [place], al
-  mov eax, 4
-  mov ebx, 1
-  mov ecx, place
-  mov edx, 1
+  mov rax, 4
+  mov rbx, 1
+  mov rcx, place
+  mov rdx, 1
   int 0x80
   pop rax
   ret
 
 exit:
-  mov eax, 1
-  mov ebx, 0
+  mov rax, 1
+  mov rbx, 0
   int 0x80
