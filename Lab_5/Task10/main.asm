@@ -10,84 +10,84 @@ section '.bss' writable
 
 section '.text' executable
 _start:
-    pop rcx                 ; Получаем количество аргументов
-    cmp rcx, 1              ; Проверяем, есть ли хотя бы один аргумент
-    je .l1                  ; Если нет, то переходим к завершению программы
+    pop rcx
+    cmp rcx, 1
+    je .l1
 
-    mov rdi, [rsp+8]        ; Получаем первый аргумент (имя входного файла)
-    mov rax, 2              ; Код системного вызова open
-    mov rsi, 0              ; Флаги открытия файла (только для чтения)
+    mov rdi, [rsp+8]
+    mov rax, 2
+    mov rsi, 0
     syscall
-    cmp rax, 0              ; Проверяем, открылся ли файл успешно
-    jl .l1                  ; Если нет, то переходим к завершению программы
-    mov r8, rax             ; Сохраняем дескриптор входного файла
-    mov rdi, [rsp+16]       ; Получаем второй аргумент (имя выходного файла)
-    mov rax, 2              ; Код системного вызова open
-    mov rsi, 1101o         ; Флаги открытия файла (создание, запись, обрезка)
+    cmp rax, 0
+    jl .l1
+    mov r8, rax
+    mov rdi, [rsp+16]
+    mov rax, 2
+    mov rsi, 1101o
     syscall
-    cmp rax, 0              ; Проверяем, открылся ли файл успешно
-    jl .l1                  ; Если нет, то переходим к завершению программы
-    mov r9, rax             ; Сохраняем дескриптор выходного файла
+    cmp rax, 0
+    jl .l1
+    mov r9, rax
 
-    xor rcx, rcx            ; Обнуляем счетчик символов
+    xor rcx, rcx
 .loop_read:
-    push rcx                ; Сохраняем счетчик символов на стеке
-    mov rax, 0              ; Код системного вызова read
-    mov rdi, r8             ; Дескриптор входного файла
-    mov rsi, buffer        ; Буфер для чтения данных
-    mov rdx, 1              ; Размер буфера
+    push rcx
+    mov rax, 0
+    mov rdi, r8
+    mov rsi, buffer
+    mov rdx, 1
     syscall
-    pop rcx                ; Восстанавливаем счетчик символов
-    cmp rax, 0              ; Проверяем, прочитаны ли данные
-    je .next               ; Если нет, то переходим к завершению обработки
-    cmp byte [buffer], '.'  ; Проверяем, является ли символ точкой
-    je .reverse_write     ; Если да, то переходим к записи в обратном порядке
-    cmp byte [buffer], '!'  ; Проверяем, является ли символ восклицательным знаком
-    je .reverse_write     ; Если да, то переходим к записи в обратном порядке
-    cmp byte [buffer], '?'  ; Проверяем, является ли символ вопросительным знаком
-    je .reverse_write     ; Если да, то переходим к записи в обратном порядке
-    mov al, [buffer]       ; Копируем символ в буфер
-    mov [buf+rcx], al      ; Записываем символ в буфер
-    inc rcx                ; Увеличиваем счетчик символов
-    jmp .loop_read          ; Продолжаем чтение
+    pop rcx
+    cmp rax, 0
+    je .next
+    cmp byte [buffer], '.'
+    je .reverse_write
+    cmp byte [buffer], '!'
+    je .reverse_write
+    cmp byte [buffer], '?'
+    je .reverse_write
+    mov al, [buffer]
+    mov [buf+rcx], al
+    inc rcx
+    jmp .loop_read
 .reverse_write:
-    dec rcx                ; Уменьшаем счетчик символов
-    add rax, buf            ; Добавляем адрес буфера к rax
-    mov rsi, buf            ; Задаем адрес буфера для записи
-    add rsi, rcx            ; Перемещаем указатель в буфере
-    push rcx                ; Сохраняем счетчик символов на стеке
-    mov rax, 1              ; Код системного вызова write
-    mov rdi, r9             ; Дескриптор выходного файла
-    mov rdx, 1              ; Размер записи
+    dec rcx
+    add rax, buf
+    mov rsi, buf
+    add rsi, rcx
+    push rcx
+    mov rax, 1
+    mov rdi, r9
+    mov rdx, 1
     syscall
-    pop rcx                ; Восстанавливаем счетчик символов
-    mov [buf+rcx], 0      ; Записываем символ конца строки
-    cmp rcx, 0              ; Проверяем, есть ли еще символы для записи
-    jg .reverse_write     ; Если да, то продолжаем запись
-    mov rsi, buffer        ; Задаем адрес буфера для записи
-    mov rax, 1              ; Код системного вызова write
-    mov rdi, r9             ; Дескриптор выходного файла
-    mov rdx, 1              ; Размер записи
+    pop rcx
+    mov [buf+rcx], 0
+    cmp rcx, 0
+    jg .reverse_write
+    mov rsi, buffer
+    mov rax, 1
+    mov rdi, r9
+    mov rdx, 1
     syscall
-    xor rcx, rcx            ; Обнуляем счетчик символов
-    jmp .loop_read          ; Продолжаем чтение
+    xor rcx, rcx
+    jmp .loop_read
 .next:
-    mov rax, buf            ; Задаем адрес буфера для вычисления длины строки
-    call len_str            ; Вызываем функцию len_str для вычисления длины строки
-    cmp rax, 0              ; Проверяем, не пуста ли строка
-    je .closing             ; Если да, то переходим к закрытию файлов
-    mov rsi, buf            ; Задаем адрес буфера для записи
-    mov rdx, rax            ; Задаем размер записи
-    mov rax, 1              ; Код системного вызова write
-    mov rdi, r9             ; Дескриптор выходного файла
+    mov rax, buf
+    call len_str
+    cmp rax, 0
+    je .closing
+    mov rsi, buf
+    mov rdx, rax
+    mov rax, 1
+    mov rdi, r9
     syscall
 .closing:
-    mov rdi, r8             ; Дескриптор входного файла
-    mov rax, 3              ; Код системного вызова close
+    mov rdi, r8
+    mov rax, 3
     syscall
-    mov rdi, r9             ; Дескриптор выходного файла
-    mov rax, 3              ; Код системного вызова close
+    mov rdi, r9
+    mov rax, 3
     syscall
 
 .l1:
-    call exit              ; Завершаем программу
+    call exit
