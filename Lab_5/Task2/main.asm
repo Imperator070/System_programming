@@ -10,7 +10,6 @@ section '.bss' writable
   ; буфер для записи
   writing_buffer rb 1
 
-
 section '.text' executable
 _start:
 
@@ -32,8 +31,6 @@ _start:
   call str_number
   ; сохраняем полученное число в регистр r15
   mov r15, rax ; k
-  ; уменьшаем число на 1
-  dec r15
 
   ; открываем файл из
   mov rax, 2 ; open из
@@ -56,36 +53,37 @@ _start:
 
   ; цикл чтения и записи
   .loop_read:
-  ; считываем 1 байт из файла из
-  mov rax, 0
-  mov rdi, r8
-  mov rsi, reading_buffer
-  mov rdx, 1
-  syscall
+    ; пропускаем (k-1) байт перед чтением k-го
+    mov rax, 0
+    mov rdi, r8
+    mov rsi, writing_buffer
+    mov rdx, r15
+    dec rdx        ; теперь пропускаем (k-1) байт
+    cmp rdx, 0
+    jle .read_byte ; если k=1, не пропускаем ничего
+    syscall
+    cmp rax, rdx   ; если прочитали меньше — конец файла
+    jne .next
 
-  ; проверяем, что удалось прочитать что-то
-  cmp rax, 0
-  je .next
+  .read_byte:
+    ; считываем 1 байт (k-й)
+    mov rax, 0
+    mov rdi, r8
+    mov rsi, reading_buffer
+    mov rdx, 1
+    syscall
+    cmp rax, 0
+    je .next
 
-  ; записываем прочитанный байт в файл куда
-  mov rax, 1
-  mov rdi, r10
-  mov rsi, reading_buffer
-  syscall
+    ; записываем прочитанный байт в файл куда
+    mov rax, 1
+    mov rdi, r10
+    mov rsi, reading_buffer
+    mov rdx, 1
+    syscall
 
-  ; пропускаем k байт в файле из
-  mov rax, 0
-  mov rdi, r8
-  mov rsi, writing_buffer
-  mov rdx, r15
-  syscall
-
-  ; проверяем, что пропускание прошло успешно
-  cmp rax, 0
-  je .next
-
-  ; продолжаем цикл чтения
-  jmp .loop_read
+    ; продолжаем цикл
+    jmp .loop_read
 
   ; выход из цикла
 .next:

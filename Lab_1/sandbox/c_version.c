@@ -1,6 +1,7 @@
-#include <stdio.h>
+#include <iostream>
 
-int main(){
-    printf("Hello, world\n");
+int main() {
+    std::cout << "Быков\nКирилл\nАлександрович\n";
+    
     return 0;
 }
