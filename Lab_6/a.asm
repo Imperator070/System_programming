@@ -19,7 +19,6 @@ extrn endwin
 extrn exit
 extrn timeout
 extrn usleep
-extrn printw
 
 section '.bss' writable
     xmax dq 1
