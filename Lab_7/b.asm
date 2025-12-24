@@ -12,7 +12,7 @@ section '.bss' writable
     buffer rb 20
     f db "/dev/random", 0
     stack1 rq 4096
-    
+
     msg1 db "Количество чисел, сумма цифр которых кратна 3:", 0xA, 0
     msg2 db "0.75-квантиль:", 0xA, 0
     msg3 db "Количество простых чисел:", 0xA, 0
